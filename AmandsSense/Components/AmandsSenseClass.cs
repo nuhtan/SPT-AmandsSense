@@ -34,11 +34,13 @@ namespace AmandsSense.Components
         public static ItemsJsonClass itemsJsonClass;
 
         public static float lastDoubleClickTime = 0.0f;
+        public static bool SenseToggleActive = false;
+        public static float SenseToggleDuration = 0.0f;
 
         public static Dictionary<string, Sprite> LoadedSprites = new Dictionary<string, Sprite>();
         public static Dictionary<string, AudioClip> LoadedAudioClips = new Dictionary<string, AudioClip>();
 
-        public static Vector3[] SenseOverlapLocations = new Vector3[9] { Vector3.zero, Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.forward + Vector3.left, Vector3.forward + Vector3.right, Vector3.back + Vector3.left, Vector3.back + Vector3.right };
+        public static Vector3[] SenseOverlapLocations = new Vector3[9] { Vector3.zero, Vector3.forward, Vector3.back, Vector3.left, Vector3.right, Vector3.forward + Vector3.left, Vector3.forward +[...]
         public static int CurrentOverlapLocation = 9;
 
         public static LayerMask BoxInteractiveLayerMask;
@@ -92,7 +94,7 @@ namespace AmandsSense.Components
             {
                 if (CurrentOverlapLocation <= 8)
                 {
-                    int CurrentOverlapCountTest = Physics.OverlapBoxNonAlloc(Player.Position + SenseOverlapLocations[CurrentOverlapLocation] * (Settings.Radius.Value * 2f / 3f), Vector3.one * (Settings.Radius.Value * 2f / 3f), CurrentOverlapLoctionColliders, Quaternion.Euler(0f, 0f, 0f), BoxInteractiveLayerMask, QueryTriggerInteraction.Collide);
+                    int CurrentOverlapCountTest = Physics.OverlapBoxNonAlloc(Player.Position + SenseOverlapLocations[CurrentOverlapLocation] * (Settings.Radius.Value * 2f / 3f), Vector3.one * (Set[...]
                     for (int i = 0; i < CurrentOverlapCountTest; i++)
                     {
                         if (!SenseWorlds.ContainsKey(CurrentOverlapLoctionColliders[i].GetInstanceID()))
@@ -126,26 +128,66 @@ namespace AmandsSense.Components
                 {
                     CooldownTime += Time.deltaTime;
                 }
+                
+                // Handle toggle duration timer
+                if (SenseToggleActive)
+                {
+                    SenseToggleDuration += Time.deltaTime;
+                    if (SenseToggleDuration >= Settings.Duration.Value)
+                    {
+                        // Auto-disable sense when duration expires
+                        SenseToggleActive = false;
+                        SenseToggleDuration = 0f;
+                        Clear();
+                        Radius = 0;
+                        if (prismEffects != null)
+                        {
+                            prismEffects.useDof = false;
+                        }
+                    }
+                }
+                
                 if (Input.GetKeyDown(Settings.SenseKey.Value.MainKey))
                 {
                     if (Settings.DoubleClick.Value)
                     {
                         float timeSinceLastClick = Time.time - lastDoubleClickTime;
                         lastDoubleClickTime = Time.time;
-                        if (timeSinceLastClick <= 0.5f && CooldownTime >= Settings.Cooldown.Value)
+                        if (timeSinceLastClick <= 0.5f)
                         {
-                            CooldownTime = 0f;
-                            CurrentOverlapLocation = 0;
-                            SenseDeadBodies();
-                            ShowSenseExfils();
-                            if (prismEffects != null)
+                            // Toggle the sense effect
+                            SenseToggleActive = !SenseToggleActive;
+                            SenseToggleDuration = 0f;
+                            
+                            if (SenseToggleActive)
                             {
-                                Radius = 0;
-                                prismEffects.useDof = Settings.useDof.Value;
+                                // Activate sense
+                                if (CooldownTime >= Settings.Cooldown.Value)
+                                {
+                                    CooldownTime = 0f;
+                                    CurrentOverlapLocation = 0;
+                                    SenseDeadBodies();
+                                    ShowSenseExfils();
+                                    if (prismEffects != null)
+                                    {
+                                        Radius = 0;
+                                        prismEffects.useDof = Settings.useDof.Value;
+                                    }
+                                    if (LoadedAudioClips.ContainsKey("Sense.wav"))
+                                    {
+                                        SenseAudioSource.PlayOneShot(LoadedAudioClips["Sense.wav"], Settings.ActivateSenseVolume.Value);
+                                    }
+                                }
                             }
-                            if (LoadedAudioClips.ContainsKey("Sense.wav"))
+                            else
                             {
-                                SenseAudioSource.PlayOneShot(LoadedAudioClips["Sense.wav"], Settings.ActivateSenseVolume.Value);
+                                // Deactivate sense
+                                Clear();
+                                Radius = 0;
+                                if (prismEffects != null)
+                                {
+                                    prismEffects.useDof = false;
+                                }
                             }
                         }
                     }
