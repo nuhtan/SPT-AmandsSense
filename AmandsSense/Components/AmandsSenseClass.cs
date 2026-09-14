@@ -139,6 +139,9 @@ namespace AmandsSense.Components
                             if (Settings.SenseAlwaysOnToggle.Value) {
                                 AlwaysOnToggle = !AlwaysOnToggle;
                             }
+                            if (!AlwaysOnToggle) {
+                                Clear()
+                            }
                             CooldownTime = 0f;
                             CurrentOverlapLocation = 0;
                             SenseDeadBodies();
