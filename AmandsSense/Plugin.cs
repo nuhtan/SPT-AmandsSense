@@ -7,7 +7,7 @@ using AmandsSense.Patches;
 
 namespace AmandsSense
 {
-    [BepInPlugin("xyz.drakia.Sense", "Sense", "3.1.0")]
+    [BepInPlugin("com.nuhtan.Sense", "Sense", "3.1.0")]
     public class AmandsSensePlugin : BaseUnityPlugin
     {
         public static string PluginFolder = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
