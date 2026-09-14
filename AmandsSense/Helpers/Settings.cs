@@ -153,7 +153,8 @@ namespace AmandsSense.Helpers
             Enabled = Config.Bind(senseSectionTitle, "EnableSense", EnableSense.OnText, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 380 }));
             EnableExfilSense = Config.Bind(senseSectionTitle, "EnableExfilSense", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 370 }));
             SenseAlwaysOn = Config.Bind(senseSectionTitle, "AlwaysOn", false, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 360 }));
-
+            SenseAlwaysOnToggle = Config.Bind(senseSectionTitle, "ToggleAlwaysOn", true, new ConfigDescription("When both this and Always on are true you can double tap f to toggle the sense.", null. new ConfigurationManagerAttributes { Order = 359 });
+            
             EnableContainers = Config.Bind(senseSectionTitle, "EnableContainers", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 355 }));
             EnableBodies = Config.Bind(senseSectionTitle, "EnableBodies", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 355 }));
             EnableLooseLoot = Config.Bind(senseSectionTitle, "EnableLooseLoot", true, new ConfigDescription("", null, new ConfigurationManagerAttributes { Order = 355 }));
