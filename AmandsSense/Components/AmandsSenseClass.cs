@@ -140,7 +140,7 @@ namespace AmandsSense.Components
                                 AlwaysOnToggle = !AlwaysOnToggle;
                             }
                             if (!AlwaysOnToggle) {
-                                Clear()
+                                CooldownTime = Settings.Cooldown.Value
                             }
                             CooldownTime = 0f;
                             CurrentOverlapLocation = 0;
