@@ -14,6 +14,7 @@ namespace AmandsSense.Helpers
         public static ConfigEntry<EnableSense> Enabled { get; set; }
         public static ConfigEntry<bool> EnableExfilSense { get; set; }
         public static ConfigEntry<bool> SenseAlwaysOn { get; set; }
+        public static ConfigEntry<bool> SenseAlwaysOnToggle { get; set; }
 
         public static ConfigEntry<bool> EnableContainers { get; set; }
         public static ConfigEntry<bool> EnableBodies { get; set; }
