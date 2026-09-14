@@ -57,6 +57,8 @@ namespace AmandsSense.Components
 
         public static string scene;
 
+        public static bool AlwaysOnToggle = true;
+
         private AudioSource SenseAudioSource { get; set; }
 
         public void Initialize(AudioSource senseAudioSource)
@@ -112,7 +114,7 @@ namespace AmandsSense.Components
                     }
                     CurrentOverlapLocation++;
                 }
-                else if (Settings.SenseAlwaysOn.Value)
+                else if (Settings.SenseAlwaysOn.Value && AlwaysOnToggle)
                 {
                     AlwaysOnTime += Time.deltaTime;
                     if (AlwaysOnTime > Settings.AlwaysOnFrequency.Value)
@@ -134,6 +136,9 @@ namespace AmandsSense.Components
                         lastDoubleClickTime = Time.time;
                         if (timeSinceLastClick <= 0.5f && CooldownTime >= Settings.Cooldown.Value)
                         {
+                            if (Settings.SenseAlwaysOnToggle.Value) {
+                                AlwaysOnToggle = !AlwaysOnToggle;
+                            }
                             CooldownTime = 0f;
                             CurrentOverlapLocation = 0;
                             SenseDeadBodies();
